@@ -21,7 +21,7 @@ namespace Windows2MonitorLibrary.Utility
     }
 
     /// <summary>
-    /// Utility Class to move Windows by Process
+    /// Utility Class to move Windows by Process 
     /// </summary>
     public static class WindowPositioner
     {
