@@ -6,6 +6,7 @@ using Windows2MonitorLibrary.ServicePollers;
 using System.Diagnostics;
 using System.Threading;
 using System.Collections.Generic;
+using Windows2MonitorLibrary.Entities;
 
 namespace _Windows2MonitorLibraryTest
 {
@@ -24,25 +25,6 @@ namespace _Windows2MonitorLibraryTest
         {
             var handles = WindowsProcesses.GetAllWindowHandles();
             Assert.IsTrue(handles.Count > 0);
-        }
-
-        [TestMethod]
-        public void ProcessHasStartedEventTest()
-        {
-            WindowsProcessListener winProcess = new WindowsProcessListener();
-            List<string> recievedEvents = new List<string>();
-
-            winProcess.ProcessStartedEvent += delegate (object sender, EventArrivedEventArgs e)
-            {
-                recievedEvents.Add(e.NewEvent.Properties["ProcessName"].Value.ToString());
-            };
-
-            var cmdProc = Process.Start(new ProcessStartInfo("cmd.exe"));
-            Thread.Sleep(1000);
-            cmdProc.CloseMainWindow();
-            cmdProc.Close();
-
-            Assert.IsTrue(recievedEvents.Contains("cmd.exe"));
         }
 
         [TestMethod]
@@ -65,6 +47,44 @@ namespace _Windows2MonitorLibraryTest
             cmdProc.CloseMainWindow(); cmdProc.Close();
 
             Assert.IsTrue(pos.X == MAX_WIDTH - 1 && pos.Y == 0);
+        }
+
+        [TestMethod]
+        public void MoveToMonitor2Test()
+        {
+            var cmdProc = Process.Start(new ProcessStartInfo("cmd.exe"));
+            bool hasMoved = false;
+            int movedTrysCount = 0;
+
+            while (!hasMoved)
+            {
+                hasMoved = WindowPositioner.SetWindowPositionByMonitor(cmdProc.MainWindowHandle, 0, 0, 2);
+                movedTrysCount++;
+            }
+
+            Thread.Sleep(2000);
+
+            WindowPositioner.GetWindowPosition(cmdProc.MainWindowHandle);
+            var pos = WindowPositioner.GetWindowPosition(cmdProc.MainWindowHandle);
+
+            cmdProc.CloseMainWindow(); cmdProc.Close();
+        }
+
+        [TestMethod]
+        public void CountMonitorsTest()
+        {
+            var monitorCount = WindowPositioner.GetMonitorCount();
+            Assert.IsTrue(monitorCount > 1);
+        }
+
+        [TestMethod]
+        public void ProcessMonitorTest()
+        {
+            ProcessMonitor procMon = new ProcessMonitor();
+
+            while (procMon.NewProcessesCount < 10)
+            {
+            }
         }
     }
 }

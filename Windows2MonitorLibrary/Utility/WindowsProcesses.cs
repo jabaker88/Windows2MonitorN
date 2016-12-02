@@ -51,7 +51,7 @@ namespace Windows2MonitorLibrary.Utility
         }
 
         /// <summary>
-        /// Gets the first occurance of a Window Handle by name
+        /// Gets the first occurrence of a Window Handle by name
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -65,6 +65,11 @@ namespace Windows2MonitorLibrary.Utility
             return handle;
         }
 
+        /// <summary>
+        /// Gets a Process by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static Process GetProcessByName(string name)
         {
             return Process.GetProcessesByName(name).First();

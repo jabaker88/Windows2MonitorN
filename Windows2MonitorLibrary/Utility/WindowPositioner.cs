@@ -14,10 +14,12 @@ namespace Windows2MonitorLibrary.Utility
     /// <summary>
     /// 2D Vector Type
     /// </summary>
-    public struct Vector2
+    public class Vector2
     {
         public int X { get; set; }
         public int Y { get; set; }
+
+        public Vector2() { X = 0;Y = 0; }
     }
 
     /// <summary>
@@ -62,15 +64,15 @@ namespace Windows2MonitorLibrary.Utility
         {
             bool windowMoved = false;
 
-            //Check to make sure the screen refereced is avaible
+            //Check to make sure the screen referenced is available
             if(Screen.AllScreens.Count() >= monitorNumber)
             {
-                //Adjust the the resolution location
-                Rectangle workingArea = Screen.AllScreens[monitorNumber].WorkingArea;
+                //Adjust the resolution location
+                Rectangle workingArea = Screen.AllScreens[monitorNumber - 1].WorkingArea;
                 x = workingArea.X + x;
                 y = workingArea.Y + y;
 
-                SetWindowPosition(hWnd, x, y, uFlag);
+                windowMoved = SetWindowPosition(hWnd, x, y, uFlag);
             }
             else
             {
@@ -97,6 +99,15 @@ namespace Windows2MonitorLibrary.Utility
             vec2.Y = pos.Y;
 
             return vec2;
+        }
+
+        /// <summary>
+        /// How many discovered monitors were found
+        /// </summary>
+        /// <returns></returns>
+        public static int GetMonitorCount()
+        {
+            return Screen.AllScreens.Count();
         }
     }
 }
